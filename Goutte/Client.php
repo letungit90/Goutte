@@ -34,6 +34,7 @@ class Client extends BaseClient
     protected $client;
 
     private $headers = array();
+    private $proxy = array();
     private $auth;
 
     public function setClient(GuzzleClientInterface $client)
@@ -78,6 +79,13 @@ class Client extends BaseClient
     public function setHeader($name, $value)
     {
         $this->headers[strtolower($name)] = $value;
+
+        return $this;
+    }
+
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
 
         return $this;
     }
@@ -173,6 +181,10 @@ class Client extends BaseClient
 
         foreach ($this->headers as $name => $value) {
             $requestOptions['headers'][$name] = $value;
+        }
+
+        if (!empty($this->proxy)) {
+            $requestOptions['proxy'] = $this->proxy;
         }
 
         // Let BrowserKit handle redirects
