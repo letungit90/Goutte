@@ -146,9 +146,15 @@ class Client extends BaseClient
             }
         }
 
+        $allCookie = $this->getCookieJar()->all();
+        if (count($allCookie) > 0) {
+            $domain = $allCookie[0]->getDomain();
+        } else {
+            $domain = parse_url($request->getUri(), PHP_URL_HOST);
+        }
         $cookies = CookieJar::fromArray(
             $this->getCookieJar()->allRawValues($request->getUri()),
-            parse_url($request->getUri(), PHP_URL_HOST)
+            $domain
         );
 
         $requestOptions = array(
